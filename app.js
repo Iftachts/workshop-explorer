@@ -59,7 +59,7 @@ function displayWorkshops(workshopsToDisplay) {
         const workshopCard = document.createElement('div');
         workshopCard.className = 'workshop-card';
         workshopCard.innerHTML = `
-            <p><strong>מספר סדנא:</strong> ${workshop['מספר סדנא'] || 'לא צוין'}</p>
+            <p><strong>מספר הסדנה:</strong> ${workshop['מספר הסדנה'] || 'לא צוין'}</p>
             <h2>${workshop['שם הסדנה'] || 'ללא כותרת'}</h2>
             <p><strong>מנחה:</strong> ${workshop['שם המנחה'] || 'לא צוין'}</p>
             <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
