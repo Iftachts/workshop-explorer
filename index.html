@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאגר סדנאות לפסיכולוגים חינוכיים - כנס 2024</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>מאגר סדנאות לפסיכולוגים חינוכיים - כנס 2024</h1>
+        <div id="filters">
+            <input type="text" id="search" placeholder="חיפוש סדנאות...">
+            <select id="facilitator">
+                <option value="">כל המנחים</option>
+            </select>
+            <select id="audience">
+                <option value="">כל קהלי היעד</option>
+            </select>
+            <select id="type">
+                <option value="">כל סוגי הסדנאות</option>
+            </select>
+            <select id="sort">
+                <option value="">מיון לפי</option>
+                <option value="שם הסדנה">שם הסדנה</option>
+                <option value="שם המנחה">שם המנחה</option>
+                <option value="קהל יעד">קהל יעד</option>
+                <option value="אופי הסדנה">סוג הסדנה</option>
+            </select>
+        </div>
+        <div id="loading" style="display: none;">טוען סדנאות...</div>
+        <div id="workshops"></div>
+        <div id="pagination"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
