@@ -57,7 +57,7 @@ h1 {
 }
 
 #filters select {
-    flex-basis: calc(20% - 10px);
+    flex-basis: calc(25% - 10px);
     max-width: 100%;
 }
 
@@ -65,13 +65,14 @@ h1 {
 #workshop-name {
     width: 100%;
     max-width: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 #workshop-name option {
     white-space: normal;
+    word-wrap: break-word;
+    max-width: 100%;
+    padding: 5px;
+    line-height: 1.3;
 }
 
 #workshops {
