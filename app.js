@@ -23,14 +23,19 @@ function loadWorkshops() {
 function populateFilters() {
     const audiences = new Set();
     const types = new Set();
+    const workshopNames = new Set();
 
     workshops.forEach(workshop => {
         if (workshop['קהל יעד']) audiences.add(workshop['קהל יעד']);
         if (workshop['אופי הסדנה']) types.add(workshop['אופי הסדנה']);
+        if (workshop['מספר הסדנה'] && workshop['שם הסדנה']) {
+            workshopNames.add(`${workshop['מספר הסדנה']}: ${workshop['שם הסדנה']}`);
+        }
     });
 
     populateSelect('audience', audiences, 'קהלי היעד');
     populateSelect('type', types, 'סוגי הסדנאות');
+    populateSelect('workshop-name', workshopNames, 'שמות הסדנאות');
 }
 
 function populateSelect(id, options, categoryName) {
@@ -92,13 +97,16 @@ function filterWorkshops() {
     const searchTerm = document.getElementById('search').value.toLowerCase();
     const audience = document.getElementById('audience').value;
     const type = document.getElementById('type').value;
+    const workshopName = document.getElementById('workshop-name').value;
     const sortBy = document.getElementById('sort').value;
 
     let filteredWorkshops = workshops.filter(workshop => {
+        const fullWorkshopName = `${workshop['מספר הסדנה']}: ${workshop['שם הסדנה']}`;
         return (
             (workshop['שם הסדנה'] && workshop['שם הסדנה'].toLowerCase().includes(searchTerm)) &&
             (!audience || workshop['קהל יעד'] === audience) &&
-            (!type || workshop['אופי הסדנה'] === type)
+            (!type || workshop['אופי הסדנה'] === type) &&
+            (!workshopName || fullWorkshopName === workshopName)
         );
     });
 
@@ -119,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('search').addEventListener('input', filterWorkshops);
     document.getElementById('audience').addEventListener('change', filterWorkshops);
     document.getElementById('type').addEventListener('change', filterWorkshops);
+    document.getElementById('workshop-name').addEventListener('change', filterWorkshops);
     document.getElementById('sort').addEventListener('change', filterWorkshops);
 });
 
