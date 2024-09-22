@@ -3,14 +3,14 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 20px;
-    background-color: #f0f4f8;
+    background-color: #f0f8ff; /* Light blue background */
     direction: rtl;
 }
 
 #app {
     max-width: 1200px;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -18,8 +18,12 @@ body {
 
 h1 {
     text-align: center;
-    color: #2c3e50;
+    color: #ffffff;
     margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(45deg, #4a90e2, #63b3ed);
+    border-radius: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #filters {
@@ -33,7 +37,7 @@ h1 {
 #filters select {
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #bdc3c7;
+    border: 2px solid #4a90e2;
     border-radius: 4px;
     margin-bottom: 10px;
     background-color: #fff;
@@ -43,8 +47,8 @@ h1 {
 #filters input:focus,
 #filters select:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.3);
 }
 
 #filters input {
@@ -64,34 +68,35 @@ h1 {
 }
 
 .workshop-card {
-    border: 1px solid #e0e0e0;
+    border: none;
     border-radius: 8px;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    border-top: 5px solid #4a90e2;
 }
 
 .workshop-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
 }
 
 .workshop-card h2 {
     margin-top: 0;
-    color: #2c3e50;
-    font-size: 1.2em;
+    color: #4a90e2;
+    font-size: 1.3em;
     margin-bottom: 15px;
 }
 
 .workshop-card p {
     margin: 10px 0;
-    color: #34495e;
-    font-size: 0.9em;
+    color: #4a5568;
+    font-size: 0.95em;
 }
 
 .workshop-card p strong {
-    color: #2c3e50;
+    color: #2d3748;
     font-weight: 600;
 }
 
@@ -102,27 +107,30 @@ h1 {
 }
 
 .page-btn {
-    background-color: #fff;
-    border: 1px solid #3498db;
-    color: #3498db;
-    padding: 8px 12px;
+    background-color: #4a90e2;
+    border: none;
+    color: #ffffff;
+    padding: 10px 15px;
     margin: 0 5px;
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 .page-btn:hover,
 .page-btn.active {
-    background-color: #3498db;
-    color: #fff;
+    background-color: #63b3ed;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #loading {
     text-align: center;
     font-size: 18px;
-    color: #3498db;
+    color: #4a90e2;
     margin: 20px 0;
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {
@@ -139,4 +147,17 @@ h1 {
     #workshops {
         grid-template-columns: 1fr;
     }
+}
+
+/* Add some color variety to workshop cards */
+.workshop-card:nth-child(3n+1) {
+    border-top-color: #e53e3e; /* Red */
+}
+
+.workshop-card:nth-child(3n+2) {
+    border-top-color: #38a169; /* Green */
+}
+
+.workshop-card:nth-child(3n) {
+    border-top-color: #d69e2e; /* Yellow */
 }
