@@ -31,14 +31,14 @@ function populateFilters() {
         if (workshop['אופי הסדנה']) types.add(workshop['אופי הסדנה']);
     });
 
-    populateSelect('facilitator', facilitators);
-    populateSelect('audience', audiences);
-    populateSelect('type', types);
+    populateSelect('facilitator', facilitators, 'מנחים');
+    populateSelect('audience', audiences, 'קהל יעד');
+    populateSelect('type', types, 'סוג הסדנה');
 }
 
-function populateSelect(id, options) {
+function populateSelect(id, options, categoryName) {
     const select = document.getElementById(id);
-    select.innerHTML = '<option value="">הכל</option>';
+    select.innerHTML = `<option value="">כל ה${categoryName}</option>`;
     options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option;
