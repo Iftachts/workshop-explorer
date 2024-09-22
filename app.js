@@ -21,17 +21,14 @@ function loadWorkshops() {
 }
 
 function populateFilters() {
-    const facilitators = new Set();
     const audiences = new Set();
     const types = new Set();
 
     workshops.forEach(workshop => {
-        if (workshop['שם המנחה']) facilitators.add(workshop['שם המנחה']);
         if (workshop['קהל יעד']) audiences.add(workshop['קהל יעד']);
         if (workshop['אופי הסדנה']) types.add(workshop['אופי הסדנה']);
     });
 
-    populateSelect('facilitator', facilitators, 'מנחים');
     populateSelect('audience', audiences, 'קהלי היעד');
     populateSelect('type', types, 'סוגי הסדנאות');
 }
@@ -93,7 +90,6 @@ function setupPagination() {
 
 function filterWorkshops() {
     const searchTerm = document.getElementById('search').value.toLowerCase();
-    const facilitator = document.getElementById('facilitator').value;
     const audience = document.getElementById('audience').value;
     const type = document.getElementById('type').value;
     const sortBy = document.getElementById('sort').value;
@@ -101,7 +97,6 @@ function filterWorkshops() {
     let filteredWorkshops = workshops.filter(workshop => {
         return (
             (workshop['שם הסדנה'] && workshop['שם הסדנה'].toLowerCase().includes(searchTerm)) &&
-            (!facilitator || workshop['שם המנחה'] === facilitator) &&
             (!audience || workshop['קהל יעד'] === audience) &&
             (!type || workshop['אופי הסדנה'] === type)
         );
@@ -122,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM content loaded. Loading workshops...');
     loadWorkshops();
     document.getElementById('search').addEventListener('input', filterWorkshops);
-    document.getElementById('facilitator').addEventListener('change', filterWorkshops);
     document.getElementById('audience').addEventListener('change', filterWorkshops);
     document.getElementById('type').addEventListener('change', filterWorkshops);
     document.getElementById('sort').addEventListener('change', filterWorkshops);
