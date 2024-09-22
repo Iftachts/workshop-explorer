@@ -32,13 +32,13 @@ function populateFilters() {
     });
 
     populateSelect('facilitator', facilitators, 'מנחים');
-    populateSelect('audience', audiences, 'קהל יעד');
-    populateSelect('type', types, 'סוג הסדנה');
+    populateSelect('audience', audiences, 'קהלי היעד');
+    populateSelect('type', types, 'סוגי הסדנאות');
 }
 
 function populateSelect(id, options, categoryName) {
     const select = document.getElementById(id);
-    select.innerHTML = `<option value="">כל ה${categoryName}</option>`;
+    select.innerHTML = `<option value="">כל ${categoryName}</option>`;
     options.forEach(option => {
         const optionElement = document.createElement('option');
         optionElement.value = option;
