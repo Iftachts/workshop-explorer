@@ -103,14 +103,20 @@ function filterWorkshops() {
     let filteredWorkshops = workshops.filter(workshop => {
         const fullWorkshopName = `${workshop['מספר הסדנה']}: ${workshop['שם הסדנה']}`;
         return (
-            (workshop['שם הסדנה'] && workshop['שם הסדנה'].toLowerCase().includes(searchTerm)) &&
             (!audience || workshop['קהל יעד'] === audience) &&
             (!type || workshop['אופי הסדנה'] === type) &&
             (!workshopName || fullWorkshopName === workshopName)
         );
     });
 
-    if (sortBy) {
+    if (searchTerm) {
+        filteredWorkshops = filteredWorkshops.map(workshop => {
+            const relevanceScore = calculateRelevanceScore(workshop, searchTerm);
+            return { ...workshop, relevanceScore };
+        }).filter(workshop => workshop.relevanceScore > 0);
+
+        filteredWorkshops.sort((a, b) => b.relevanceScore - a.relevanceScore);
+    } else if (sortBy) {
         filteredWorkshops.sort((a, b) => {
             if (a[sortBy] < b[sortBy]) return -1;
             if (a[sortBy] > b[sortBy]) return 1;
@@ -119,6 +125,25 @@ function filterWorkshops() {
     }
 
     displayWorkshops(filteredWorkshops);
+}
+
+function calculateRelevanceScore(workshop, searchTerm) {
+    let score = 0;
+    const fields = ['מספר הסדנה', 'שם הסדנה', 'שם המנחה', 'קהל יעד', 'אופי הסדנה', 'תקציר'];
+    
+    fields.forEach(field => {
+        if (workshop[field] && workshop[field].toLowerCase().includes(searchTerm)) {
+            if (field === 'שם הסדנה') {
+                score += 3; // Higher score for title match
+            } else if (field === 'תקציר') {
+                score += 2; // Medium score for description match
+            } else {
+                score += 1; // Lower score for other fields
+            }
+        }
+    });
+
+    return score;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
