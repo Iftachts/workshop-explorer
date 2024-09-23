@@ -1,6 +1,7 @@
 let workshops = [];
 let currentPage = 1;
 const workshopsPerPage = 12;
+let fuse; // Fuse.js instance for fuzzy search
 
 function loadWorkshops() {
     console.log('Loading workshops...');
@@ -10,6 +11,7 @@ function loadWorkshops() {
         complete: function(results) {
             console.log('CSV parsing complete. Rows:', results.data.length);
             workshops = results.data;
+            initializeFuseSearch();
             populateFilters();
             displayWorkshops(workshops);
             setupPagination();
@@ -18,6 +20,15 @@ function loadWorkshops() {
             console.error('Error parsing CSV:', error);
         }
     });
+}
+
+function initializeFuseSearch() {
+    const options = {
+        keys: ['מספר הסדנה', 'שם הסדנה', 'שם המנחה', 'קהל יעד', 'אופי הסדנה', 'תקציר'],
+        threshold: 0.3,
+        includeScore: true
+    };
+    fuse = new Fuse(workshops, options);
 }
 
 function populateFilters() {
@@ -111,7 +122,14 @@ function filterWorkshops() {
     const workshopName = document.getElementById('workshop-name').value;
     const sortBy = document.getElementById('sort').value;
 
-    let filteredWorkshops = workshops.filter(workshop => {
+    let filteredWorkshops = workshops;
+
+    if (searchTerm) {
+        const fuseResults = fuse.search(searchTerm);
+        filteredWorkshops = fuseResults.map(result => result.item);
+    }
+
+    filteredWorkshops = filteredWorkshops.filter(workshop => {
         const fullWorkshopName = `${workshop['מספר הסדנה']}: ${workshop['שם הסדנה']}`;
         return (
             (!audience || workshop['קהל יעד'] === audience) &&
@@ -120,14 +138,7 @@ function filterWorkshops() {
         );
     });
 
-    if (searchTerm) {
-        filteredWorkshops = filteredWorkshops.map(workshop => {
-            const relevanceScore = calculateRelevanceScore(workshop, searchTerm);
-            return { ...workshop, relevanceScore };
-        }).filter(workshop => workshop.relevanceScore > 0);
-
-        filteredWorkshops.sort((a, b) => b.relevanceScore - a.relevanceScore);
-    } else if (sortBy) {
+    if (sortBy) {
         filteredWorkshops.sort((a, b) => {
             if (a[sortBy] < b[sortBy]) return -1;
             if (a[sortBy] > b[sortBy]) return 1;
@@ -136,25 +147,6 @@ function filterWorkshops() {
     }
 
     displayWorkshops(filteredWorkshops);
-}
-
-function calculateRelevanceScore(workshop, searchTerm) {
-    let score = 0;
-    const fields = ['מספר הסדנה', 'שם הסדנה', 'שם המנחה', 'קהל יעד', 'אופי הסדנה', 'תקציר'];
-    
-    fields.forEach(field => {
-        if (workshop[field] && workshop[field].toLowerCase().includes(searchTerm)) {
-            if (field === 'שם הסדנה') {
-                score += 3; // Higher score for title match
-            } else if (field === 'תקציר') {
-                score += 2; // Medium score for description match
-            } else {
-                score += 1; // Lower score for other fields
-            }
-        }
-    });
-
-    return score;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
