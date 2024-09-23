@@ -66,7 +66,7 @@ function displayWorkshops(workshopsToDisplay) {
                 <p><strong>מנחה:</strong> ${workshop['שם המנחה'] || 'לא צוין'}</p>
                 <button class="expand-btn">הצג פרטים נוספים</button>
             </div>
-            <div class="workshop-details" style="display: none;">
+            <div class="workshop-details">
                 <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
                 <p><strong>סוג הסדנה:</strong> ${workshop['אופי הסדנה'] || 'לא צוין'}</p>
                 <p><strong>תיאור:</strong> ${workshop['תקציר'] || 'אין תיאור זמין'}</p>
@@ -77,13 +77,8 @@ function displayWorkshops(workshopsToDisplay) {
         const expandBtn = workshopCard.querySelector('.expand-btn');
         const detailsDiv = workshopCard.querySelector('.workshop-details');
         expandBtn.addEventListener('click', () => {
-            if (detailsDiv.style.display === 'none') {
-                detailsDiv.style.display = 'block';
-                expandBtn.textContent = 'הסתר פרטים';
-            } else {
-                detailsDiv.style.display = 'none';
-                expandBtn.textContent = 'הצג פרטים נוספים';
-            }
+            detailsDiv.classList.toggle('expanded');
+            expandBtn.textContent = detailsDiv.classList.contains('expanded') ? 'הסתר פרטים' : 'הצג פרטים נוספים';
         });
     });
 
