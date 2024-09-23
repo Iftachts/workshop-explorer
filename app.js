@@ -5,21 +5,46 @@ let fuse; // Fuse.js instance for fuzzy search
 
 function loadWorkshops() {
     console.log('Loading workshops...');
+    showLoadingIndicator();
     Papa.parse('kenes2024_without_keywords.csv', {
         download: true,
         header: true,
         complete: function(results) {
             console.log('CSV parsing complete. Rows:', results.data.length);
-            workshops = results.data;
+            workshops = results.data.filter(workshop => workshop['מספר הסדנה'] && workshop['שם הסדנה']);
             initializeFuseSearch();
             populateFilters();
             displayWorkshops(workshops);
             setupPagination();
+            hideLoadingIndicator();
         },
         error: function(error) {
             console.error('Error parsing CSV:', error);
+            hideLoadingIndicator();
+            showErrorMessage('Failed to load workshops. Please try again later.');
         }
     });
+}
+
+function showLoadingIndicator() {
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.id = 'loading-indicator';
+    loadingIndicator.textContent = 'Loading workshops...';
+    document.body.appendChild(loadingIndicator);
+}
+
+function hideLoadingIndicator() {
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.remove();
+    }
+}
+
+function showErrorMessage(message) {
+    const errorMessage = document.createElement('div');
+    errorMessage.id = 'error-message';
+    errorMessage.textContent = message;
+    document.body.appendChild(errorMessage);
 }
 
 function initializeFuseSearch() {
@@ -147,9 +172,11 @@ function filterWorkshops() {
 
     if (sortBy) {
         filteredWorkshops.sort((a, b) => {
-            if (a[sortBy] < b[sortBy]) return -1;
-            if (a[sortBy] > b[sortBy]) return 1;
-            return 0;
+            if (sortBy === 'מספר הסדנה') {
+                return parseInt(a[sortBy]) - parseInt(b[sortBy]);
+            } else {
+                return (a[sortBy] || '').localeCompare(b[sortBy] || '');
+            }
         });
     }
 
