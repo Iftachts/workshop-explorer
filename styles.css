@@ -61,7 +61,6 @@ h1 {
     max-width: 100%;
 }
 
-/* New styles for workshop-name dropdown */
 #workshop-name {
     width: 100%;
     max-width: none;
@@ -78,7 +77,6 @@ h1 {
     direction: rtl;
 }
 
-/* Ensure dropdown options are aligned properly */
 select {
     text-align-last: right;
 }
@@ -93,11 +91,11 @@ select {
 .workshop-card {
     border: none;
     border-radius: 8px;
-    padding: 20px;
     background-color: #ffffff;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border-top: 5px solid #4a90e2;
+    overflow: hidden;
 }
 
 .workshop-card:hover {
@@ -105,22 +103,47 @@ select {
     transform: translateY(-5px);
 }
 
-.workshop-card h2 {
+.workshop-header {
+    padding: 20px;
+    cursor: pointer;
+}
+
+.workshop-header h2 {
     margin-top: 0;
     color: #4a90e2;
     font-size: 1.3em;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
-.workshop-card p {
-    margin: 10px 0;
-    color: #4a5568;
-    font-size: 0.95em;
-}
-
-.workshop-card p strong {
+.workshop-number {
+    font-weight: bold;
     color: #2d3748;
-    font-weight: 600;
+}
+
+.workshop-details {
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.workshop-details.expanded {
+    max-height: 1000px;
+    padding: 20px;
+}
+
+.expand-btn {
+    background-color: #4a90e2;
+    color: #ffffff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.expand-btn:hover {
+    background-color: #3a7bc8;
 }
 
 #pagination {

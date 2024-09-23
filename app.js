@@ -61,14 +61,30 @@ function displayWorkshops(workshopsToDisplay) {
         const workshopCard = document.createElement('div');
         workshopCard.className = 'workshop-card';
         workshopCard.innerHTML = `
-            <p><strong>מספר הסדנה:</strong> ${workshop['מספר הסדנה'] || 'לא צוין'}</p>
-            <h2>${workshop['שם הסדנה'] || 'ללא כותרת'}</h2>
-            <p><strong>מנחה:</strong> ${workshop['שם המנחה'] || 'לא צוין'}</p>
-            <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
-            <p><strong>סוג הסדנה:</strong> ${workshop['אופי הסדנה'] || 'לא צוין'}</p>
-            <p><strong>תיאור:</strong> ${workshop['תקציר'] || 'אין תיאור זמין'}</p>
+            <div class="workshop-header">
+                <h2><span class="workshop-number">${workshop['מספר הסדנה'] || 'לא צוין'}</span>: ${workshop['שם הסדנה'] || 'ללא כותרת'}</h2>
+                <p><strong>מנחה:</strong> ${workshop['שם המנחה'] || 'לא צוין'}</p>
+                <button class="expand-btn">הצג פרטים נוספים</button>
+            </div>
+            <div class="workshop-details" style="display: none;">
+                <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
+                <p><strong>סוג הסדנה:</strong> ${workshop['אופי הסדנה'] || 'לא צוין'}</p>
+                <p><strong>תיאור:</strong> ${workshop['תקציר'] || 'אין תיאור זמין'}</p>
+            </div>
         `;
         workshopsContainer.appendChild(workshopCard);
+
+        const expandBtn = workshopCard.querySelector('.expand-btn');
+        const detailsDiv = workshopCard.querySelector('.workshop-details');
+        expandBtn.addEventListener('click', () => {
+            if (detailsDiv.style.display === 'none') {
+                detailsDiv.style.display = 'block';
+                expandBtn.textContent = 'הסתר פרטים';
+            } else {
+                detailsDiv.style.display = 'none';
+                expandBtn.textContent = 'הצג פרטים נוספים';
+            }
+        });
     });
 
     setupPagination();
