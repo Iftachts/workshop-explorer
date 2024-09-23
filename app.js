@@ -113,6 +113,7 @@ function displayWorkshops(workshopsToDisplay) {
                 <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
                 <p><strong>סוג הסדנה:</strong> ${workshop['אופי הסדנה'] || 'לא צוין'}</p>
                 <p><strong>תיאור:</strong> ${workshop['תקציר'] || 'אין תיאור זמין'}</p>
+                <button class="manage-files-btn">ניהול קבצים</button>
             </div>
         `;
         workshopsContainer.appendChild(workshopCard);
@@ -122,6 +123,11 @@ function displayWorkshops(workshopsToDisplay) {
         expandBtn.addEventListener('click', () => {
             detailsDiv.classList.toggle('expanded');
             expandBtn.textContent = detailsDiv.classList.contains('expanded') ? 'הסתר פרטים' : 'הצג פרטים נוספים';
+        });
+
+        const manageFilesBtn = workshopCard.querySelector('.manage-files-btn');
+        manageFilesBtn.addEventListener('click', () => {
+            showWorkshopManagement(workshop);
         });
     });
 
@@ -181,6 +187,56 @@ function filterWorkshops() {
     }
 
     displayWorkshops(filteredWorkshops);
+}
+
+function showWorkshopManagement(workshop) {
+    const modal = document.getElementById('workshop-management');
+    const modalTitle = document.getElementById('workshop-management-title');
+    const fileDirectory = document.getElementById('file-directory');
+
+    modalTitle.textContent = `ניהול קבצים - ${workshop['שם הסדנה']}`;
+
+    // Dummy data for file directory
+    const files = [
+        { name: 'מצגת הסדנה.pptx', type: 'file' },
+        { name: 'חומרי עזר', type: 'folder', contents: ['מאמר 1.pdf', 'מאמר 2.pdf'] },
+        { name: 'סיכום הסדנה.docx', type: 'file' }
+    ];
+
+    fileDirectory.innerHTML = generateFileDirectoryHTML(files);
+
+    modal.style.display = 'block';
+
+    const closeBtn = modal.querySelector('.close');
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+}
+
+function generateFileDirectoryHTML(files) {
+    let html = '<ul class="file-list">';
+    files.forEach(file => {
+        if (file.type === 'file') {
+            html += `<li class="file-item"><i class="fas fa-file"></i> ${file.name}</li>`;
+        } else if (file.type === 'folder') {
+            html += `
+                <li class="folder-item">
+                    <i class="fas fa-folder"></i> ${file.name}
+                    <ul class="subfolder">
+                        ${file.contents.map(subfile => `<li class="file-item"><i class="fas fa-file"></i> ${subfile}</li>`).join('')}
+                    </ul>
+                </li>
+            `;
+        }
+    });
+    html += '</ul>';
+    return html;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
