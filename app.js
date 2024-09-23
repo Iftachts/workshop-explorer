@@ -14,7 +14,6 @@ function loadWorkshops() {
             workshops = results.data.filter(workshop => workshop['מספר הסדנה'] && workshop['שם הסדנה']);
             initializeFuseSearch();
             populateFilters();
-            sortWorkshops('מספר הסדנה'); // Sort workshops by number initially
             displayWorkshops(workshops);
             setupPagination();
             hideLoadingIndicator();
@@ -148,16 +147,6 @@ function setupPagination() {
     });
 }
 
-function sortWorkshops(sortBy) {
-    workshops.sort((a, b) => {
-        if (sortBy === 'מספר הסדנה') {
-            return parseInt(a[sortBy]) - parseInt(b[sortBy]);
-        } else {
-            return (a[sortBy] || '').localeCompare(b[sortBy] || '');
-        }
-    });
-}
-
 function filterWorkshops() {
     const searchTerm = document.getElementById('search').value.trim();
     const audience = document.getElementById('audience').value;
@@ -181,7 +170,16 @@ function filterWorkshops() {
         );
     });
 
-    sortWorkshops(sortBy || 'מספר הסדנה');
+    if (sortBy) {
+        filteredWorkshops.sort((a, b) => {
+            if (sortBy === 'מספר הסדנה') {
+                return parseInt(a[sortBy]) - parseInt(b[sortBy]);
+            } else {
+                return (a[sortBy] || '').localeCompare(b[sortBy] || '');
+            }
+        });
+    }
+
     displayWorkshops(filteredWorkshops);
 }
 
