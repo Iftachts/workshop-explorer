@@ -24,8 +24,15 @@ function loadWorkshops() {
 
 function initializeFuseSearch() {
     const options = {
-        keys: ['מספר הסדנה', 'שם הסדנה', 'שם המנחה', 'קהל יעד', 'אופי הסדנה', 'תקציר'],
-        threshold: 0.3,
+        keys: [
+            { name: 'מספר הסדנה', weight: 2 },
+            { name: 'שם הסדנה', weight: 2 },
+            { name: 'שם המנחה', weight: 1.5 },
+            { name: 'קהל יעד', weight: 1 },
+            { name: 'אופי הסדנה', weight: 1 },
+            { name: 'תקציר', weight: 1 }
+        ],
+        threshold: 0.4,
         includeScore: true
     };
     fuse = new Fuse(workshops, options);
@@ -116,7 +123,7 @@ function setupPagination() {
 }
 
 function filterWorkshops() {
-    const searchTerm = document.getElementById('search').value.toLowerCase();
+    const searchTerm = document.getElementById('search').value.trim();
     const audience = document.getElementById('audience').value;
     const type = document.getElementById('type').value;
     const workshopName = document.getElementById('workshop-name').value;
