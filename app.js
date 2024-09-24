@@ -113,7 +113,7 @@ function displayWorkshops(workshopsToDisplay) {
                 <p><strong>קהל יעד:</strong> ${workshop['קהל יעד'] || 'לא צוין'}</p>
                 <p><strong>סוג הסדנה:</strong> ${workshop['אופי הסדנה'] || 'לא צוין'}</p>
                 <p><strong>תיאור:</strong> ${workshop['תקציר'] || 'אין תיאור זמין'}</p>
-                <button class="manage-files-btn">ניהול קבצים</button>
+                <button class="manage-files-btn" data-workshop-id="${workshop['מספר הסדנה']}">ניהול קבצים</button>
             </div>
         `;
         workshopsContainer.appendChild(workshopCard);
@@ -127,7 +127,8 @@ function displayWorkshops(workshopsToDisplay) {
 
         const manageFilesBtn = workshopCard.querySelector('.manage-files-btn');
         manageFilesBtn.addEventListener('click', () => {
-            showWorkshopManagement(workshop);
+            const workshopId = manageFilesBtn.dataset.workshopId;
+            showWorkshopManagement(workshopId);
         });
     });
 
@@ -189,21 +190,39 @@ function filterWorkshops() {
     displayWorkshops(filteredWorkshops);
 }
 
-function showWorkshopManagement(workshop) {
+function showWorkshopManagement(workshopId) {
     const modal = document.getElementById('workshop-management');
     const modalTitle = document.getElementById('workshop-management-title');
     const fileDirectory = document.getElementById('file-directory');
 
+    const workshop = workshops.find(w => w['מספר הסדנה'] === workshopId);
     modalTitle.textContent = `ניהול קבצים - ${workshop['שם הסדנה']}`;
 
-    // Dummy data for file directory
-    const files = [
-        { name: 'מצגת הסדנה.pptx', type: 'file' },
-        { name: 'חומרי עזר', type: 'folder', contents: ['מאמר 1.pdf', 'מאמר 2.pdf'] },
-        { name: 'סיכום הסדנה.docx', type: 'file' }
-    ];
+    fileDirectory.innerHTML = ''; // Clear previous content
 
-    fileDirectory.innerHTML = generateFileDirectoryHTML(files);
+    // Fetch files from GitHub directory
+    fetch(`https://api.github.com/repos/{your-username}/{your-repo-name}/contents/workshop-${workshopId}`) // Replace with your GitHub username and repository name
+        .then(response => response.json())
+        .then(files => {
+            if (files.message && files.message.includes('Not Found')) {
+                fileDirectory.innerHTML = '<p>לא נמצאו קבצים עבור סדנה זו.</p>';
+            } else {
+                const fileList = document.createElement('ul');
+                files.forEach(file => {
+                    const fileItem = document.createElement('li');
+                    const fileLink = document.createElement('a');
+                    fileLink.href = file.download_url;
+                    fileLink.textContent = file.name;
+                    fileItem.appendChild(fileLink);
+                    fileList.appendChild(fileItem);
+                });
+                fileDirectory.appendChild(fileList);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching files:', error);
+            fileDirectory.innerHTML = '<p>אירעה שגיאה בטעינת הקבצים.</p>';
+        });
 
     modal.style.display = 'block';
 
@@ -217,26 +236,6 @@ function showWorkshopManagement(workshop) {
             modal.style.display = 'none';
         }
     }
-}
-
-function generateFileDirectoryHTML(files) {
-    let html = '<ul class="file-list">';
-    files.forEach(file => {
-        if (file.type === 'file') {
-            html += `<li class="file-item"><i class="fas fa-file"></i> ${file.name}</li>`;
-        } else if (file.type === 'folder') {
-            html += `
-                <li class="folder-item">
-                    <i class="fas fa-folder"></i> ${file.name}
-                    <ul class="subfolder">
-                        ${file.contents.map(subfile => `<li class="file-item"><i class="fas fa-file"></i> ${subfile}</li>`).join('')}
-                    </ul>
-                </li>
-            `;
-        }
-    });
-    html += '</ul>';
-    return html;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
