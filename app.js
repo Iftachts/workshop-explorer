@@ -1,7 +1,6 @@
 let workshops = [];
 let currentPage = 1;
 const workshopsPerPage = 12;
-let fuse; // Fuse.js instance for fuzzy search
 
 function loadWorkshops() {
     console.log('Loading workshops...');
@@ -12,7 +11,6 @@ function loadWorkshops() {
         complete: function(results) {
             console.log('CSV parsing complete. Rows:', results.data.length);
             workshops = results.data.filter(workshop => workshop['מספר הסדנה'] && workshop['שם הסדנה']);
-            initializeFuseSearch();
             populateFilters();
             displayWorkshops(workshops);
             setupPagination();
@@ -45,22 +43,6 @@ function showErrorMessage(message) {
     errorMessage.id = 'error-message';
     errorMessage.textContent = message;
     document.body.appendChild(errorMessage);
-}
-
-function initializeFuseSearch() {
-    const options = {
-        keys: [
-            { name: 'מספר הסדנה', weight: 2 },
-            { name: 'שם הסדנה', weight: 2 },
-            { name: 'שם המנחה', weight: 1.5 },
-            { name: 'קהל יעד', weight: 1 },
-            { name: 'אופי הסדנה', weight: 1 },
-            { name: 'תקציר', weight: 1 } // Add the 'תקציר' field to the keys array
-        ],
-        threshold: 0.4,
-        includeScore: true
-    };
-    fuse = new Fuse(workshops, options);
 }
 
 function populateFilters() {
@@ -155,18 +137,28 @@ function setupPagination() {
 }
 
 function filterWorkshops() {
-    const searchTerm = document.getElementById('search').value.trim();
+    const searchTerm = document.getElementById('search').value.trim().toLowerCase();
     const audience = document.getElementById('audience').value;
     const type = document.getElementById('type').value;
     const workshopName = document.getElementById('workshop-name').value;
     const sortBy = document.getElementById('sort').value;
 
-    let filteredWorkshops = workshops;
+    let filteredWorkshops = workshops.filter(workshop => {
+        return Object.values(workshop).some(value => value.toString().toLowerCase().includes(searchTerm));
+    });
 
-    if (searchTerm) {
-        const fuseResults = fuse.search(searchTerm);
-        filteredWorkshops = fuseResults.map(result => result.item);
-    }
+    // Prioritize results with search term in workshop name
+    filteredWorkshops.sort((a, b) => {
+        const aName = a['שם הסדנה'].toLowerCase();
+        const bName = b['שם הסדנה'].toLowerCase();
+        if (aName.includes(searchTerm) && !bName.includes(searchTerm)) {
+            return -1;
+        } else if (!aName.includes(searchTerm) && bName.includes(searchTerm)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    });
 
     filteredWorkshops = filteredWorkshops.filter(workshop => {
         const fullWorkshopName = `${workshop['מספר הסדנה']}: ${workshop['שם הסדנה']}`;
