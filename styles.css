@@ -122,11 +122,13 @@ select {
 
 .workshop-details {
     padding: 0 20px;
+    max-height: 5em;
     overflow-y: auto;
-    transition: padding 0.3s ease;
+    transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
 .workshop-details.expanded {
+    max-height: none;
     padding: 20px;
 }
 
