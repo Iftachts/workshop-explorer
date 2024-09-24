@@ -55,7 +55,7 @@ function initializeFuseSearch() {
             { name: 'שם המנחה', weight: 1.5 },
             { name: 'קהל יעד', weight: 1 },
             { name: 'אופי הסדנה', weight: 1 },
-            { name: 'תקציר', weight: 1 }
+            { name: 'תקציר', weight: 1 } // Add the 'תקציר' field to the keys array
         ],
         threshold: 0.4,
         includeScore: true
