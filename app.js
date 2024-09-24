@@ -201,7 +201,7 @@ function showWorkshopManagement(workshopId) {
     fileDirectory.innerHTML = ''; // Clear previous content
 
     // Fetch files from GitHub directory
-    fetch(`https://api.github.com/repos/{your-username}/{your-repo-name}/contents/workshop-${workshopId}`) // Replace with your GitHub username and repository name
+    fetch(`https://api.github.com/repos/iftachts/workshop-explorer/contents/workshop-${workshopId}`) 
         .then(response => response.json())
         .then(files => {
             if (files.message && files.message.includes('Not Found')) {
